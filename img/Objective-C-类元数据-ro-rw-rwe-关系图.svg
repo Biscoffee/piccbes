@@ -1,0 +1,114 @@
+<svg width="100%" viewBox="0 0 680 760" role="img" aria-label="class_ro_t, class_rw_t, class_rw_ext_t 三者关系与惰性升级流程图" xmlns="http://www.w3.org/2000/svg"><parsererror xmlns="http://www.w3.org/1999/xhtml" style="display: block; white-space: pre; border: 2px solid #c77; padding: 0 1em 0 1em; margin: 1em; background-color: #fdd; color: black"><h3>This page contains the following errors:</h3><div style="font-family:monospace;font-size:12px">error on line 113 at column 7: Extra content at the end of the document
+</div><h3>Below is a rendering of the page up to the first error.</h3></parsererror>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+<style>
+.t{font:400 14px ui-sans-serif,system-ui;fill:var(--text-primary,rgba(0,0,0,.8))}
+.th{font:500 14px ui-sans-serif,system-ui;fill:var(--text-primary,rgba(0,0,0,.8))}
+.tc{font:500 13px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--text-primary,rgba(0,0,0,.8))}
+.ts{font:400 12px ui-sans-serif,system-ui;fill:var(--text-secondary,rgba(0,0,0,.5))}
+.tm{font:400 12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:var(--text-secondary,rgba(0,0,0,.5))}
+.box{fill:var(--card-bg,#fff);stroke:var(--intensity-8,rgba(0,0,0,.08));stroke-width:.5}
+.panel{fill:var(--panel-bg,#FEFDFC);stroke:var(--intensity-8,rgba(0,0,0,.08));stroke-width:.5}
+.arr{fill:none;stroke:var(--intensity-35,rgba(0,0,0,.35));stroke-width:1.5;marker-end:url(#arrow)}
+.dash{fill:none;stroke:var(--intensity-20,rgba(0,0,0,.2));stroke-width:.5;stroke-dasharray:4 4}
+.accent{fill:none;stroke:#E58522;stroke-width:1.5;marker-end:url(#arrow)}
+.roFill{fill:#58B2DC;opacity:.12}
+.rwFill{fill:#F3A04C;opacity:.14}
+.rweFill{fill:#86C166;opacity:.14}
+.roStroke{stroke:#58B2DC;stroke-width:1}
+.rwStroke{stroke:#E58522;stroke-width:1}
+.rweStroke{stroke:#86C166;stroke-width:1}
+.accT{font:500 12px ui-sans-serif,system-ui}
+@media (prefers-color-scheme:dark){
+.t,.th{fill:rgba(255,255,255,.8)}
+.tc{fill:rgba(255,255,255,.85)}
+.ts,.tm{fill:rgba(255,255,255,.5)}
+.box{fill:#2E2E2E;stroke:rgba(255,255,255,.08)}
+.panel{fill:#332D28;stroke:rgba(255,255,255,.08)}
+.arr{stroke:rgba(255,255,255,.35)}
+.dash{stroke:rgba(255,255,255,.2)}
+}
+</style>
+
+<text x="40" y="30" class="th">类元数据三结构体:编译期 → realize → 动态修改</text>
+
+<rect x="40" y="46" width="600" height="58" rx="10" class="panel"/>
+<rect x="40" y="46" width="4" height="58" rx="0" fill="#58B2DC"/>
+<text x="60" y="70" class="tc">objc_class · bits.data()</text>
+<text x="60" y="90" class="ts">编译产物里 bits 初始指向 ro;首次使用触发 realize 后才指向 rw</text>
+
+<rect x="60" y="130" width="220" height="170" rx="10" class="box roStroke"/>
+<rect x="60" y="130" width="220" height="30" rx="10" class="roFill"/>
+<rect x="60" y="150" width="220" height="10" class="roFill"/>
+<text x="76" y="150" class="tc">class_ro_t</text>
+<text x="200" y="150" class="accT" fill="#3a93c4">编译期只读</text>
+<text x="76" y="180" class="ts">__DATA_CONST · 进程间可共享</text>
+<text x="76" y="202" class="tm">instanceSize / instanceStart</text>
+<text x="76" y="222" class="tm">flags · name · ivars</text>
+<text x="76" y="242" class="tm">baseMethods</text>
+<text x="76" y="262" class="tm">baseProtocols</text>
+<text x="76" y="282" class="tm">baseProperties</text>
+
+<rect x="360" y="130" width="280" height="170" rx="10" class="box rwStroke"/>
+<rect x="360" y="130" width="280" height="30" rx="10" class="rwFill"/>
+<rect x="360" y="150" width="280" height="10" class="rwFill"/>
+<text x="376" y="150" class="tc">class_rw_t</text>
+<text x="556" y="150" class="accT" fill="#E58522">运行期可写</text>
+<text x="376" y="180" class="ts">realize 时分配 · 承载动态性</text>
+<text x="376" y="202" class="tm">flags · witness · index</text>
+<text x="376" y="222" class="tm">firstSubclass / nextSiblingClass</text>
+<rect x="376" y="236" width="248" height="50" rx="8" fill="var(--intensity-6,rgba(0,0,0,.06))" stroke="#E58522" stroke-width=".5"/>
+<text x="388" y="256" class="tc">ro_or_rw_ext</text>
+<text x="388" y="275" class="ts">PointerUnion · 低位 tag 二选一</text>
+
+<path d="M285 215 L355 215" class="arr"/>
+<text x="292" y="208" class="ts">持有</text>
+
+<rect x="40" y="340" width="600" height="380" rx="10" class="dash" fill="none"/>
+<text x="56" y="362" class="th">ro_or_rw_ext 的惰性升级(三态)</text>
+
+<rect x="60" y="380" width="260" height="120" rx="10" class="box"/>
+<rect x="60" y="380" width="6" height="120" rx="0" fill="#58B2DC"/>
+<text x="80" y="404" class="th">① 未升级(绝大多数类)</text>
+<text x="80" y="426" class="ts">tag = class_ro_t*</text>
+<text x="80" y="448" class="tm">ro_or_rw_ext 直接 = ro</text>
+<text x="80" y="470" class="ts">不分配 rwe,零额外内存</text>
+<text x="80" y="490" class="tm">methods() → ro-&gt;baseMethods</text>
+
+<rect x="380" y="380" width="260" height="120" rx="10" class="box rweStroke"/>
+<rect x="380" y="380" width="6" height="120" rx="0" fill="#86C166"/>
+<text x="400" y="404" class="th">② 已升级(被动态改过)</text>
+<text x="400" y="426" class="ts">tag = class_rw_ext_t*</text>
+<text x="400" y="448" class="tm">ro_or_rw_ext = rwe</text>
+<text x="400" y="470" class="tm">rwe-&gt;ro 保存原 ro</text>
+<text x="400" y="490" class="tm">methods() → rwe-&gt;methods(array)</text>
+
+<path d="M322 440 L376 440" class="accent"/>
+<text x="318" y="432" class="accT" fill="#E58522" text-anchor="middle">extAlloc</text>
+<text x="349" y="525" class="ts" text-anchor="middle">触发:attach category · class_addMethod · 加属性</text>
+
+<rect x="380" y="556" width="260" height="120" rx="10" class="box rweStroke"/>
+<rect x="380" y="556" width="6" height="120" rx="0" fill="#86C166"/>
+<text x="400" y="580" class="tc">class_rw_ext_t</text>
+<text x="588" y="580" class="accT" fill="#5a8f3e">可变副本区</text>
+<text x="400" y="604" class="tm">ro(原只读蓝图)</text>
+<text x="400" y="626" class="tm">methods   : method_array_t</text>
+<text x="400" y="648" class="tm">properties: property_array_t</text>
+<text x="400" y="668" class="tm">protocols : protocol_array_t</text>
+
+<path d="M510 502 L510 552" class="accent"/>
+<text x="518" y="530" class="ts">指向</text>
+
+<rect x="60" y="556" width="260" height="120" rx="10" class="panel"/>
+<text x="80" y="580" class="th">ro() 读取逻辑</text>
+<text x="80" y="604" class="tm">if slowpath(is rwe)</text>
+<text x="96" y="624" class="tm">return rwe-&gt;ro</text>
+<text x="80" y="644" class="tm">else</text>
+<text x="96" y="664" class="tm">return 自身即 ro</text>
+
+<path d="M320 616 L376 616" class="dash"/>
+</svg>
